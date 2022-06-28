@@ -5,7 +5,7 @@ import Error404 from "@/assets/404.svg";
 
 export default function NotFind() {
   return (
-    <Layout className="overflow-hidden bg-[#f5f9fe] h-[100vh]">
+    <Layout className="overflow-hidden bg-[var(--color-bg-3)] h-[100vh]">
       <Layout.Header className="bg-white h-14 box-border p-2 border-gray-200 border-b ">
         <NavBar />
       </Layout.Header>

@@ -3,50 +3,73 @@ import Home from "./pages/Home/index";
 import NotFind from "./pages/404";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
-import Projects from "./pages/Home/Projects";
-import Templates from "./pages/Home/Templates";
-import { filterFlatDeep } from "./utils";
-import { IconApps } from "@arco-design/web-react/icon";
+import { IconApps, IconMenu } from "@arco-design/web-react/icon";
 import { SettingProvider } from "./components/Settings";
 import useMode from "./components/Settings/ModeSetting/useMode";
 import useTheme from "./components/Settings/ThemeSetting/useTheme";
+import { Spin } from "@arco-design/web-react";
+import { lazy, Suspense } from "react";
 
+const lazyload = (importFn) => {
+  const LazyComp = lazy(importFn);
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full h-full flex items-center justify-center">
+          <Spin />
+        </div>
+      }
+    >
+      <LazyComp />
+    </Suspense>
+  );
+};
 export interface CustomRoutes {
   name: string;
   path?: string;
   children?: CustomRoutes[];
   element?: React.ReactElement;
   icon?: React.ReactElement;
+  inMenu?: boolean;
+  breadcrumb?: boolean;
 }
 
 export const MenuRoutes: CustomRoutes[] = [
   {
-    name: "项 目",
+    name: "page.welcome",
+    path: "welcome",
+    element: lazyload(() => import("./pages/Home/Welcome")),
     icon: <IconApps />,
+    breadcrumb: false,
+  },
+  {
+    name: "page.menus",
+    icon: <IconMenu />,
+    path: "menus",
     children: [
       {
-        name: "全部项目",
-        path: "projects",
-        element: <Projects />,
-        icon: (
-          <i className="arco-icon arco-icon-select-all i-ant-design-project-outlined" />
-        ),
+        name: "page.welcome",
+        path: "welcome1",
+        element: lazyload(() => import("./pages/Home/Welcome")),
+        icon: <IconApps />,
       },
       {
-        name: "项目模板",
-        path: "templates",
-        element: <Templates />,
-        icon: <i className="arco-icon arco-icon-select-all i-gg-template" />,
+        name: "page.welcome",
+        path: "welcome2",
+        element: lazyload(() => import("./pages/Home/Welcome")),
+        icon: <IconApps />,
+        inMenu: false,
+      },
+      {
+        name: "page.welcome",
+        path: "welcome3",
+        element: lazyload(() => import("./pages/Home/Welcome")),
+        icon: <IconApps />,
+        breadcrumb: false,
       },
     ],
   },
 ];
-
-const filterMenuRoutes = filterFlatDeep(
-  MenuRoutes,
-  "children",
-  (item) => !!item.element
-);
 
 export default function App() {
   // 初始化模式
@@ -62,7 +85,7 @@ export default function App() {
         {
           path: "home",
           element: <Home />,
-          children: filterMenuRoutes,
+          children: MenuRoutes,
         },
       ],
     },

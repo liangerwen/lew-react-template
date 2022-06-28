@@ -104,8 +104,8 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                     if (res) {
                       Notification.success({
                         id: "theme-modal-notify",
-                        title: "重置主题",
-                        content: "重置主题成功",
+                        title: t("settings.theme.reset"),
+                        content: t("settings.theme.reset.success"),
                         duration: 1500,
                         closable: true,
                       });
@@ -117,7 +117,7 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                   });
               }}
             >
-              重置主题
+              {t("settings.theme.reset")}
             </Button>
           </div>
         ) : null
@@ -129,9 +129,9 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
           className="my-[200px]"
           description={
             <Typography.Text type="secondary">
-              没有相关主题
+              {t("settings.theme.search.null")}
               <Link href="https://arco.design/themes" target="_blank">
-                前往主题商店创建
+                {t("settings.theme.search.create")}
               </Link>
             </Typography.Text>
           }
@@ -201,10 +201,10 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                                 );
                               }}
                             >
-                              商城中打开
+                              {t("settings.theme.open")}
                             </Button>
                             {theme?.themeId === item?.themeId ? (
-                              <Tag>当前使用</Tag>
+                              <Tag>{t("settings.theme.use")}</Tag>
                             ) : (
                               <Button
                                 type="primary"
@@ -215,8 +215,8 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                                 onClick={() => {
                                   Notification.info({
                                     id: "theme-modal-notify",
-                                    title: "安装主题",
-                                    content: "正在安装主题...",
+                                    title: t("settings.theme.install"),
+                                    content: t("settings.theme.installing"),
                                     duration: 100000,
                                   });
                                   setDisabled(true);
@@ -225,16 +225,20 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                                       if (res) {
                                         Notification.success({
                                           id: "theme-modal-notify",
-                                          title: "安装主题",
-                                          content: "安装主题成功",
+                                          title: t("settings.theme.install"),
+                                          content: t(
+                                            "settings.theme.install.success"
+                                          ),
                                           duration: 1500,
                                         });
                                         onConfirm?.();
                                       } else {
                                         Notification.error({
                                           id: "theme-modal-notify",
-                                          title: "安装主题",
-                                          content: "安装主题失败",
+                                          title: t("settings.theme.install"),
+                                          content: t(
+                                            "settings.theme.install.failed"
+                                          ),
                                           duration: 1500,
                                         });
                                       }
@@ -244,7 +248,7 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                                     });
                                 }}
                               >
-                                安装主题
+                                {t("settings.theme.install.btn")}
                               </Button>
                             )}
                           </Space>

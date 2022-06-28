@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Divider,
   Dropdown,
   Grid,
@@ -20,6 +21,9 @@ import LangSetting from "../Settings/LocaleSetting";
 import ModeSetting from "../Settings/ModeSetting";
 import PageSetting from "../Settings/PageSetting";
 import OnlineTheme from "../Settings/ThemeSetting";
+import useLocale from "@/hooks/useLocale";
+import { useSettings } from "../Settings";
+import { createPortal } from "react-dom";
 
 const Row = Grid.Row;
 
@@ -31,6 +35,10 @@ enum MenuKeys {
 
 export default function () {
   const navigate = useNavigate();
+  const { t } = useLocale();
+  const {
+    pageSetting: { navbar },
+  } = useSettings();
 
   const menus = useMemo(
     () => (
@@ -66,23 +74,23 @@ export default function () {
         <Divider className="important-my-1" />
         <Menu.Item key={MenuKeys.GITHUB}>
           <IconGithub className="mr-2" />
-          项目地址
+          {t("navbar.menus.github")}
         </Menu.Item>
         <Menu.Item key={MenuKeys.SETTING}>
           <IconSettings className="mr-2" />
-          个人设置
+          {t("navbar.menus.settings")}
         </Menu.Item>
         <Divider className="important-my-1" />
         <Menu.Item key={MenuKeys.LOGOUT}>
           <IconExport className="mr-2" />
-          退出登录
+          {t("navbar.menus.logout")}
         </Menu.Item>
       </Menu>
     ),
-    []
+    [t]
   );
 
-  return (
+  return navbar ? (
     <Row
       className={styles["toolbar-warpper"]}
       justify="space-between"
@@ -99,14 +107,14 @@ export default function () {
         </Space>
       </Link>
       <Space className="px-2" align="center" size={20}>
-        <Tooltip content="切换语言">
+        <Tooltip content={t("navbar.lang")}>
           <LangSetting />
         </Tooltip>
         <ModeSetting />
-        <Tooltip content="安装主题">
+        <Tooltip content={t("navbar.theme")}>
           <OnlineTheme />
         </Tooltip>
-        <Tooltip content="设置">
+        <Tooltip content={t("navbar.settings")}>
           <PageSetting />
         </Tooltip>
 
@@ -120,5 +128,15 @@ export default function () {
         </Dropdown>
       </Space>
     </Row>
+  ) : (
+    <PageSetting
+      trigger={
+        <Button
+          type="primary"
+          icon={<IconSettings fontSize={24} />}
+          className="important-fixed top-[250px] right-0 important-w-[42px] important-h-[42px] important-flex justify-center items-center"
+        />
+      }
+    />
   );
 }

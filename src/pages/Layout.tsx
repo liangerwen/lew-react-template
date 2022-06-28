@@ -16,12 +16,12 @@ export default function Layout() {
       return;
     }
     if (path === "" || path === "/") {
-      navigate("/home/projects", { replace: true });
+      navigate("/home/welcome", { replace: true });
     }
   }, [location]);
 
   return (
-    <ArcoLayout className="overflow-hidden bg-[#f5f9fe] h-[100vh]">
+    <ArcoLayout className="overflow-hidden bg-[var(--color-bg-3)] h-[100vh]">
       <ArcoLayout.Header>
         <NavBar />
       </ArcoLayout.Header>
