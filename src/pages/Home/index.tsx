@@ -1,7 +1,7 @@
 import { Breadcrumb, Layout, Menu } from "@arco-design/web-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { CustomRoutes, MenuRoutes } from "@/App";
+import { CustomRoutes, MenuRoutes } from "@/Router";
 import { concatPath } from "@/utils";
 import { useSettings } from "@/components/Settings";
 import useLocale from "@/hooks/useLocale";
