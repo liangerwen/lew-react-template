@@ -110,7 +110,7 @@ export default function Login() {
       </ul>
       <Layout.Header>
         <Space className="p-8 absolute right-0" align="center" size={20}>
-          <Tooltip content={t("navbar.lang.change")}>
+          <Tooltip content={t("navbar.lang")}>
             <LangSetting
               iconOnly
               className="text-2xl cursor-pointer important-color-white"
@@ -120,7 +120,7 @@ export default function Login() {
             iconOnly
             className="text-2xl cursor-pointer important-color-white"
           />
-          <Tooltip content="安装主题">
+          <Tooltip content={t("navbar.theme")}>
             <OnlineTheme
               iconOnly
               className="text-2xl cursor-pointer important-color-white"

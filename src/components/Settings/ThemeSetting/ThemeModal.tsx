@@ -9,7 +9,6 @@ import {
   Notification,
   Pagination,
   Tag,
-  Space,
   Input,
   Empty,
   Link,
@@ -157,102 +156,109 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                       }}
                       animation
                     >
-                      <div
-                        style={{
-                          height: 160,
-                          overflow: "hidden",
-                        }}
-                      >
-                        <img
-                          style={{ width: "100%" }}
-                          alt={item?.themeName || ""}
-                          src={item?.cover || ""}
-                        />
-                      </div>
+                      <img
+                        className="w-full h-full"
+                        alt={item?.themeName}
+                        src={item?.cover}
+                      />
                     </Skeleton>
                   }
+                  actions={[
+                    <Skeleton
+                      loading={loading}
+                      animation
+                      text={false}
+                      image={{
+                        style: {
+                          width: 120,
+                          height: 32,
+                          margin: 0,
+                        },
+                      }}
+                    >
+                      <Link
+                        target={"_blank"}
+                        icon={<IconLink />}
+                        href={`https://arco.design/themes/design/${item?.themeId}`}
+                      >
+                        {t("settings.theme.open")}
+                      </Link>
+                    </Skeleton>,
+                    <Skeleton
+                      loading={loading}
+                      animation
+                      text={false}
+                      image={{
+                        style: {
+                          width: 80,
+                          height: 32,
+                          margin: 0,
+                        },
+                      }}
+                    >
+                      {theme?.themeId === item?.themeId ? (
+                        <Tag>{t("settings.theme.use")}</Tag>
+                      ) : (
+                        <Button
+                          type="primary"
+                          size="mini"
+                          disabled={disabled}
+                          onClick={() => {
+                            Notification.info({
+                              id: "theme-modal-notify",
+                              title: t("settings.theme.install"),
+                              content: t("settings.theme.installing"),
+                              duration: 100000,
+                            });
+                            setDisabled(true);
+                            setTheme(item)
+                              .then((res) => {
+                                if (res) {
+                                  Notification.success({
+                                    id: "theme-modal-notify",
+                                    title: t("settings.theme.install"),
+                                    content: t(
+                                      "settings.theme.install.success"
+                                    ),
+                                    duration: 1500,
+                                  });
+                                  onConfirm?.();
+                                } else {
+                                  Notification.error({
+                                    id: "theme-modal-notify",
+                                    title: t("settings.theme.install"),
+                                    content: t("settings.theme.install.failed"),
+                                    duration: 1500,
+                                  });
+                                }
+                              })
+                              .finally(() => {
+                                setDisabled(false);
+                              });
+                          }}
+                        >
+                          {t("settings.theme.install.btn")}
+                        </Button>
+                      )}
+                    </Skeleton>,
+                  ]}
                 >
                   <Meta
                     title={
                       <Skeleton
+                        style={{ display: "block" }}
                         loading={loading}
                         animation
-                        style={{ marginTop: 0 }}
-                        text={{ rows: 1, width: 72 }}
+                        text={false}
+                        image={{
+                          style: {
+                            width: "100%",
+                            height: 20,
+                            margin: 0,
+                          },
+                        }}
                       >
                         {item?.themeName}
-                      </Skeleton>
-                    }
-                    description={
-                      <Skeleton
-                        loading={loading}
-                        animation
-                        text={{ rows: 1, width: 150, style: { height: 32 } }}
-                      >
-                        <Row justify="end" style={{ marginTop: "10px" }}>
-                          <Space>
-                            <Button
-                              type="text"
-                              icon={<IconLink />}
-                              size="mini"
-                              onClick={() => {
-                                window.open(
-                                  `https://arco.design/themes/design/${item.themeId}`
-                                );
-                              }}
-                            >
-                              {t("settings.theme.open")}
-                            </Button>
-                            {theme?.themeId === item?.themeId ? (
-                              <Tag>{t("settings.theme.use")}</Tag>
-                            ) : (
-                              <Button
-                                type="primary"
-                                size="mini"
-                                disabled={
-                                  disabled || theme?.themeId === item?.themeId
-                                }
-                                onClick={() => {
-                                  Notification.info({
-                                    id: "theme-modal-notify",
-                                    title: t("settings.theme.install"),
-                                    content: t("settings.theme.installing"),
-                                    duration: 100000,
-                                  });
-                                  setDisabled(true);
-                                  setTheme(item)
-                                    .then((res) => {
-                                      if (res) {
-                                        Notification.success({
-                                          id: "theme-modal-notify",
-                                          title: t("settings.theme.install"),
-                                          content: t(
-                                            "settings.theme.install.success"
-                                          ),
-                                          duration: 1500,
-                                        });
-                                        onConfirm?.();
-                                      } else {
-                                        Notification.error({
-                                          id: "theme-modal-notify",
-                                          title: t("settings.theme.install"),
-                                          content: t(
-                                            "settings.theme.install.failed"
-                                          ),
-                                          duration: 1500,
-                                        });
-                                      }
-                                    })
-                                    .finally(() => {
-                                      setDisabled(false);
-                                    });
-                                }}
-                              >
-                                {t("settings.theme.install.btn")}
-                              </Button>
-                            )}
-                          </Space>
-                        </Row>
                       </Skeleton>
                     }
                   />

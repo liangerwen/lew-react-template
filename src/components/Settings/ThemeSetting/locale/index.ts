@@ -25,7 +25,7 @@ export default {
     "settings.theme.search": "搜索",
     "settings.theme.search.null": "没有相关主题",
     "settings.theme.search.create": "前往主题商店创建",
-    "settings.theme.open": "商城中打开",
+    "settings.theme.open": "在主题商店打开",
     "settings.theme.use": "当前使用",
     "settings.theme.install.btn": "安装主题",
   },
