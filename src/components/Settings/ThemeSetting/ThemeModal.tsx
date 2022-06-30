@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -18,6 +18,7 @@ import useLocale from "@/hooks/useLocale";
 import { getTheme } from "@/https/api/theme";
 import { ThemeType } from "..";
 import useTheme from "./useTheme";
+import useRequest from "@/hooks/useRequest";
 
 const Row = Grid.Row;
 const Col = Grid.Col;
@@ -30,33 +31,31 @@ interface IProps {
 }
 
 export default function ({ onClose, onConfirm, visible }: IProps) {
-  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
-  const [data, setData] = useState<{ list: ThemeType[]; total: number }>({
-    list: Array.from({ length: 6 }),
-    total: 0,
-  });
+
+  const { loading, data, request } = useRequest<{
+    total: number;
+    list: ThemeType[];
+  }>(
+    getTheme,
+    {
+      list: Array.from({ length: 6 }),
+      total: 0,
+    },
+    {
+      clearDataBeforeRequest: true,
+      defaultArgs: { pageSize: 6, currentPage: page, keyword },
+    }
+  );
 
   const { theme, setTheme } = useTheme();
   const [disabled, setDisabled] = useState(false);
   const { t } = useLocale();
 
-  const fetchTheme = useCallback((page, keyword) => {
-    setLoading(true);
-    setData({ list: Array.from({ length: 6 }), total: 0 });
-    getTheme({ pageSize: 6, currentPage: page, keyword })
-      .then((data) => {
-        setData(data);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
   useEffect(() => {
     if (visible) {
-      fetchTheme(page, keyword);
+      request({ pageSize: 6, currentPage: page, keyword });
     }
   }, [visible]);
   return (
@@ -72,7 +71,7 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
             style={{ width: 300 }}
             onChange={setKeyword}
             onSearch={(val) => {
-              fetchTheme(1, val);
+              request({ pageSize: 6, currentPage: 1, keyword: val });
               setPage(1);
             }}
           />
@@ -274,7 +273,7 @@ export default function ({ onClose, onConfirm, visible }: IProps) {
                 onChange={(val) => {
                   if (val !== page) {
                     setPage(val);
-                    fetchTheme(val, keyword);
+                    request({ pageSize: 6, currentPage: val, keyword });
                   }
                 }}
               />

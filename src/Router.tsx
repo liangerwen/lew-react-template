@@ -1,16 +1,12 @@
-import { useRoutes } from "react-router-dom";
-import Home from "./pages/Home/index";
 import NotFind from "./pages/404";
 import Login from "./pages/Login";
-import Layout from "./pages/Layout";
-import { IconApps, IconMenu } from "@arco-design/web-react/icon";
-import { SettingProvider } from "./components/Settings";
-import useMode from "./components/Settings/ModeSetting/useMode";
-import useTheme from "./components/Settings/ThemeSetting/useTheme";
+import { IconApps } from "@arco-design/web-react/icon";
 import { Spin } from "@arco-design/web-react";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import Layout from "./components/Layout";
+import { useNavigate } from "react-router-dom";
 
-const lazyload = (importFn) => {
+const lazyload = (importFn, props = {}) => {
   const LazyComp = lazy(importFn);
   return (
     <Suspense
@@ -20,13 +16,22 @@ const lazyload = (importFn) => {
         </div>
       }
     >
-      <LazyComp />
+      <LazyComp {...props} />
     </Suspense>
   );
 };
+
+function Redirect({ to }) {
+  let navigate = useNavigate();
+  useEffect(() => {
+    navigate(to);
+  }, []);
+  return null;
+}
+
 export interface CustomRoutes {
-  name: string;
-  path?: string;
+  name?: string;
+  path: string;
   children?: CustomRoutes[];
   element?: React.ReactElement;
   icon?: React.ReactElement;
@@ -34,63 +39,54 @@ export interface CustomRoutes {
   breadcrumb?: boolean;
 }
 
-export const MenuRoutes: CustomRoutes[] = [
+const routes: CustomRoutes[] = [
   {
-    name: "page.welcome",
-    path: "welcome",
-    element: lazyload(() => import("./pages/Home/Welcome")),
-    icon: <IconApps />,
-    breadcrumb: false,
-  },
-  {
-    name: "page.menus",
-    icon: <IconMenu />,
-    path: "menus",
+    path: "/",
+    inMenu: false,
+    element: <Layout widthRouter menu />,
     children: [
       {
-        name: "page.welcome",
-        path: "welcome1",
-        element: lazyload(() => import("./pages/Home/Welcome")),
+        path: "",
+        element: <Redirect to="/workspace/welcome" />,
+        inMenu: false,
+      },
+      {
+        path: "workspace",
+        name: "page.menus",
         icon: <IconApps />,
+        children: [
+          {
+            name: "page.welcome",
+            path: "welcome",
+            element: lazyload(() => import("./pages/Home/Welcome")),
+            icon: (
+              <i className="arco-icon arco-icon-select-all i-ant-design-project-outlined" />
+            ),
+          },
+        ],
       },
       {
         name: "page.welcome",
         path: "welcome2",
         element: lazyload(() => import("./pages/Home/Welcome")),
-        icon: <IconApps />,
-        inMenu: false,
-      },
-      {
-        name: "page.welcome",
-        path: "welcome3",
-        element: lazyload(() => import("./pages/Home/Welcome")),
-        icon: <IconApps />,
-        breadcrumb: false,
+        icon: <i className="arco-icon arco-icon-select-all i-gg-template" />,
       },
     ],
   },
+  {
+    path: "/login",
+    element: <Login />,
+    inMenu: false,
+  },
+  {
+    path: "*",
+    element: (
+      <Layout navbar={false}>
+        <NotFind />
+      </Layout>
+    ),
+    inMenu: false,
+  },
 ];
 
-export default function Router() {
-  return useRoutes([
-    {
-      path: "/",
-      element: <Layout />,
-      children: [
-        {
-          path: "home",
-          element: <Home />,
-          children: MenuRoutes,
-        },
-      ],
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "*",
-      element: <NotFind />,
-    },
-  ]);
-}
+export default routes;
